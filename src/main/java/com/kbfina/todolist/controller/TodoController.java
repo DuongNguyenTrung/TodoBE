@@ -3,6 +3,7 @@ package com.kbfina.todolist.controller;
 import java.util.List;
 
 import com.kbfina.todolist.domain.Todo;
+import com.kbfina.todolist.model.DateBetween;
 import com.kbfina.todolist.repository.TodoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +36,22 @@ public class TodoController {
         }
 
     }
+    @GetMapping(value = "/todo/date/{id}")
+    public ResponseEntity<List<Todo>> getByDate(@PathVariable(value = "id") int id,@RequestBody DateBetween dateBetween) {
+        try {
+            
+            List<Todo> list = todoRepository.findByIdAccountAndDeadlineBetween(id,dateBetween.start,dateBetween.end);
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+    }
 
     @PostMapping("/todo")
     public ResponseEntity<Todo> add(@RequestBody Todo todo) {
         try {
            Todo td = todoRepository.save(todo);
-           System.out.println(td.idtodo);
             return new ResponseEntity<Todo>(td, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -65,6 +76,10 @@ public class TodoController {
             Todo td = todoRepository.findById(id).get();
             if(todo.status!=null)td.status=todo.status;
             if(todo.todoname!="")td.todoname=todo.todoname;
+            if(todo.categoryID!=null)td.categoryID=todo.categoryID;
+            if(todo.deadline!=null)td.deadline=todo.deadline;
+
+
             todoRepository.save(td); 
             return new ResponseEntity<String>("update todolist successful !", HttpStatus.OK);
         } catch (Exception e) {

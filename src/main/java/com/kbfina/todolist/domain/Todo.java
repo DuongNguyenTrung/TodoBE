@@ -1,5 +1,7 @@
 package com.kbfina.todolist.domain;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +21,10 @@ public class Todo {
     public int idtodo;
     @Column(nullable = false)
     public int idAccount;
+    @Column(nullable = false)
+    public Date deadline;
+    @Column(nullable = false)
+    public Integer categoryID;
     public Boolean status;
     @Column(nullable = false)
     public String todoname;
